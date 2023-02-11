@@ -1,0 +1,51 @@
+<html>
+    <body>
+        <div id="message">Pls let this site use your location or else it definitely won't do anything</div>
+        <ol id="locationList"></ol>
+    </body>
+    <script>
+        const getDeviceLocation = new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, { maximumAge: 3600000 })
+        })
+        
+        const loadWikivoyageData = fetch("wikivoyage.json")
+            .then((data) => data.json())
+            .catch((e) => {
+                alert("Error: " + e)
+            })
+
+        Promise.all([loadWikivoyageData, getDeviceLocation])
+            .then(([wikivoyage, { coords }]) => {
+                const deviceLat = coords.latitude
+                const deviceLng = coords.longitude
+                function distanceFromDevice ({ lat, lng }) {
+                    return Math.pow(deviceLat - lat, 2) + Math.pow(deviceLng - lng, 2)
+                }
+
+                const closestPlaces = Object.values(wikivoyage)
+                    .sort((a, b) => distanceFromDevice(a) - distanceFromDevice(b))
+                    .slice(0, 10)
+
+                return closestPlaces
+            })
+            .then((nodes) => {
+                const messageElement = document.getElementById("message")
+                messageElement.innerText = ""
+                
+                const listElement = document.getElementById("locationList")
+
+                nodes.forEach(({ title }) => {
+                    const anchor = document.createElement("a")
+                    anchor.setAttribute("href", `https://www.wikivoyage.org/wiki/${title}`)
+                    anchor.setAttribute("target", "blank")
+                    anchor.setAttribute("rel", "noreferrer")
+                    anchor.text = title
+
+                    const li = document.createElement("li")
+                    li.appendChild(anchor)
+                    
+                    listElement.appendChild(li)
+                })
+            })
+    </script>
+</html>
