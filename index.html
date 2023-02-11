@@ -5,6 +5,7 @@
             body {
                 max-width: 1024px;
                 margin: 64px auto;
+                padding: 0 12px;
                 font-size: larger;
             }
             li {
@@ -43,7 +44,7 @@
             })
             .then((nodes) => {
                 const messageElement = document.getElementById("message")
-                messageElement.innerText = ""
+                messageElement.innerText = "Closeby places on Wikivoyage:"
                 
                 const listElement = document.getElementById("locationList")
 
@@ -59,6 +60,14 @@
                     
                     listElement.appendChild(li)
                 })
+            })
+            .catch(error => {
+                const messageElement = document.getElementById("message")
+                messageElement.innerText = error.code 
+                    ? `Error (${error.code}): ${error.message}`
+                    : error.message
+                        ? `Error: ${error.message}`
+                        : "An error occured ... :/"
             })
     </script>
 </html>
