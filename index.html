@@ -1,5 +1,8 @@
 <html>
     <head>
+        <title>Nearby Wikivoyage</title>
+        <meta name="description" content="Find Wikivoyage pages for places near your location">
+        <meta property="og:image" content="./favicon.ico">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <style>
             body {
@@ -44,7 +47,7 @@
             })
             .then((nodes) => {
                 const messageElement = document.getElementById("message")
-                messageElement.innerText = "Closeby places on Wikivoyage:"
+                messageElement.innerText = "Nearby places on Wikivoyage:"
                 
                 const listElement = document.getElementById("locationList")
 
